@@ -7,15 +7,26 @@ function App() {
 
   const handleAddTask = () => {
     if (task.trim() !== '') {
-      setTodos([...todos, task]);
+      setTodos([...todos, { text: task, completed: false }]);
       setTask('');
     }
+  };
+
+  const handleToggle = (index) => {
+    const newTodos = [...todos];
+    newTodos[index].completed = !newTodos[index].completed;
+    setTodos(newTodos);
+  };
+
+  const handleRemove = (index) => {
+    const newTodos = todos.filter((_, i) => i !== index);
+    setTodos(newTodos);
   };
 
   return (
     <div className="App">
       <h1>📝 To-Do List</h1>
-      <div style={{ marginBottom: '20px' }}>
+      <div className="input-container">
         <input
           type="text"
           value={task}
@@ -26,8 +37,19 @@ function App() {
       </div>
 
       <ul>
-        {todos.map((t, index) => (
-          <li key={index}>{t}</li>
+        {todos.map((todo, index) => (
+          <li key={index}>
+            <span className="task-text">
+              {todo.completed ? '✅ ' : '⬜ '} 
+              {todo.text}
+            </span>
+            <div className="buttons">
+              <button onClick={() => handleToggle(index)}>
+                {todo.completed ? 'Undone' : 'Done'}
+              </button>
+              <button onClick={() => handleRemove(index)}>Remove</button>
+            </div>
+          </li>
         ))}
       </ul>
     </div>
